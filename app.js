@@ -9,6 +9,7 @@ const compression = require("compression");
 
 //set up mongoose connection
 const mongoose = require('mongoose');
+//the user name and key will be hidden on the development branch
 const mongoDB = process.env.DB_ROOT || 'mongodb+srv://momocloud:Tuikhongbiet123@cluster0.qmodu.mongodb.net/database1?retryWrites=true&w=majority';
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 let db = mongoose.connection;
@@ -18,7 +19,6 @@ db.once("open", function(){
 });
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -33,6 +33,5 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 module.exports = app;
