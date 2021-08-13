@@ -12,11 +12,17 @@ const mongoose = require('mongoose');
 //the user name and key will be hidden on the development branch
 const mongoDB = process.env.DB_ROOT || 'mongodb+srv://momocloud:Tuikhongbiet123@cluster0.qmodu.mongodb.net/database1?retryWrites=true&w=majority';
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.set("useCreateIndex", true);
 let db = mongoose.connection;
 db.on('error', console.error.bind(console,'MongoDB connection error:'));
 db.once("open", function(){
     console.log("we are in");
 });
+
+mongoose.Promise = global.Promise;
+
+//auth file
+require('./auth/auth');
 
 var indexRouter = require('./routes/index');
 

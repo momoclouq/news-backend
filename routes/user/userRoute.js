@@ -1,30 +1,25 @@
 var express = require('express');
 var router = express.Router({mergeParams: true});
+const passport = require('passport');
 
-const collectionRouter = require('./collection/collectionRoute')
-
-//next path
-router.use('/:userid/collection', collectionRouter);
+const userController = require("./userController");
 
 //path: /user
+
+//unauthenticated
 //get 1 user by id
-router.get('/:userid', function(req, res, next) {
-  res.send('get request on user ' + req.params.userid);
-});
+router.get('/:userid', userController.user_get_id);
 
-//update 1 user by id
-router.put('/:userid', function(req, res, next){
-  res.send('update request on user ' + req.params.userid);
-});
+//authenticated
+//get current user
+router.get('/', passport.authenticate('jwt', {session: false}), userController.user_get);
 
-//delete 1 user by id
-router.delete('/:userid', (req, res, next) => {
-  res.send('delete request on user ' + req.params.userid);
-});
+//authenticated
+//delete current user
+router.delete('/', passport.authenticate('jwt', {session: false}), userController.user_delete);
 
-//create a user
-router.post('/', (req,res,next) => {
-  res.send('post request on user');
-});
+//authenticated
+//update current user
+router.post('/', passport.authenticate('jwt', {session: false}), userController.user_update);
 
 module.exports = router;
