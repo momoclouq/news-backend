@@ -35,4 +35,7 @@ router.delete('/:wordid', wordController.word_delete_id);
 //post word
 router.post('/', wordController.word_post);
 
+//get all word in the collection
+router.get("/", wordController.word_get_all);
+
 module.exports = router;

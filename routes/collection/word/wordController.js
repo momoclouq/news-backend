@@ -89,3 +89,29 @@ exports.word_delete_id = async (req, res, next) => {
         });
     });
 }
+
+//params: collectionid
+exports.word_get_all = (req, res, next) => {
+    Collection.findById(req.params.collectionid)
+    .exec(function(err, collection){
+        if (err) return next(err);
+        if(collection == null) return res.json({
+            errors: "collection not found"
+        });
+
+        let allWords = collection.item_ids.reduce(async (id) => {
+            Word.findById(new mongoose.Types.ObjectId(id), (err, word) => {
+                if(err) return next(err);
+                if(word == null) return res.json({
+                    errors: "collection is corrupted"
+                })
+
+                return word;
+            });
+        });
+
+        return res.json({
+            allWords: allWords
+        });
+    });
+}
