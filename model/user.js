@@ -19,7 +19,6 @@ const userSchema = new Schema({
 
 //encrypt password before storing
 userSchema.pre('save', async function(next) {
-    const user = this;
     const hash = await bcrypt.hash(this.password, 10);
 
     this.password = hash;
@@ -28,28 +27,21 @@ userSchema.pre('save', async function(next) {
 );
 
 userSchema.methods.isValidPassword = async function(password) {
-    const user = this;
-    const compare = await bcrypt.compare(password, user.password);
-  
+    const compare = await bcrypt.compare(password, this.password);
+    
     return compare;
 }  
 
-userSchema.pre('findByIdAndDelete', (next) => {
+userSchema.post('findOneAndDelete', async (doc) => {
     //delete all word collection of the user
-    this.word_collections.foreach((id) => {
-        Collection.findByIdAndDelete(id, (err) => {
-            if(err) return next(err);
-        });
-    });
+    await Promise.all(doc.word_collection.map(async (id) => {
+        await Collection.findByIdAndDelete(id);
+    }));
 
     //delete all news collection of the user
-    this.news_collection.foreach((id) => {
-        Collection.findByIdAndDelete(id, (err) => {
-            if(err) return next(err);
-        });
-    });
-
-    next();
+    await Promise.all(doc.news_collection.map(async (id) => {
+        await Collection.findByIdAndDelete(id);
+    }));
 });
 
 module.exports = mongoose.model("User", userSchema);

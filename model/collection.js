@@ -10,15 +10,12 @@ const collectionSchema = new Schema({
     created_date: {type: Date, default: Date.now(), required: true}
 });
 
-collectionSchema.pre("findByIdAndDelete", function(next){
-    if(this.type == "word"){
-        this.item_ids.foreach((id) => {
-            Word.findByIdAndDelete(new mongoose.Types.ObjectId(id), (err) => {
-                if(err) return next(err);
-            });
-        });
+collectionSchema.post("findOneAndDelete", async function(doc){
+    if(doc.type == "word"){
+        await Promise.all(doc.item_ids.map(async (id) => {
+            await Word.findByIdAndDelete(id);
+        }));
     }
-    next();
 });
 
 module.exports = mongoose.model("Collection", collectionSchema);

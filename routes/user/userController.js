@@ -2,7 +2,6 @@ const User = require('../../model/user');
 const passport = require('passport');
 
 let { body, validationResult } = require("express-validator");
-const { selectFields } = require('express-validator/src/select-fields');
 
 //unauthenticated
 //params: userid
@@ -41,17 +40,16 @@ exports.user_get = (req, res, next) => {
 //authenticated
 //params: 
 exports.user_update = [
-    body('fullname').isLength({max: 100}).withMessage("fullname must be less than 100 character-long"),
-    body('city').isString().withMessage("City must be a string"),
-    body('country').isString().withMessage("country must be a string"),
+    body('fullname').optional().isLength({max: 100}).withMessage("fullname must be less than 100 character-long"),
+    body('city').optional().isString().withMessage("City must be a string"),
+    body('country').optional().isString().withMessage("country must be a string"),
     (req, res, next) => {
         let errors = validationResult(req);
 
-        let update = { 
-            fullname: req.body.fullname,
-            city: req.body.city,
-            country: req.body.country
-        };
+        let update = {};
+        if(req.body.fullname) update.fullname = req.body.fullname;
+        if(req.body.city) update.city = req.body.city;
+        if(req.body.country) update.country = req.body.country;
 
         if(!errors.isEmpty()) return res.json({ errors: errors.array()});
         else {

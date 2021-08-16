@@ -4,6 +4,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const {body, validationResult} = require('express-validator');
 
+//tested
 //authentication
 router.post(
     '/login',
@@ -12,25 +13,32 @@ router.post(
         'login',
         async (err, user, info) => {
           try {
-            if (err || !user) {
+            if(err) {
               const error = new Error('An error occurred.');
   
               return next(error);
             }
-  
+
+            //wrong email or password
+            if(!user){
+                return res.json({
+                    errors: info
+                });
+            }
+
             //function to establish a login session
             //we do not use session so session: false, function is just for fun
             req.login(
-              user,
-              { session: false },
-              async (error) => {
-                if (error) return next(error);
-  
-                const body = { _id: user._id, email: user.email };
-                const token = jwt.sign({ user: body }, 'cutecat');
-  
-                return res.json({ token });
-              }
+                user,
+                { session: false },
+                async (error) => {
+                    if (error) return next(error);
+    
+                    const body = { _id: user._id, email: user.email };
+                    const token = jwt.sign({ user: body }, 'cutecat');
+    
+                    return res.json({ token });
+                }
             );
           } catch (error) {
             return next(error);
@@ -40,6 +48,7 @@ router.post(
     }
 );
 
+//tested
 router.post('/signup', [
     body('username').exists().isLength({max: 50}).withMessage("username must be less than 50 character-long"),
     body('fullname').exists().isLength({max: 100}).withMessage("fullname must be less than 100 character-long"),
