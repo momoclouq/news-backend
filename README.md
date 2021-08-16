@@ -35,7 +35,7 @@ Some terms:
     Return: the entire user document  
     Error: this will return a 401 status error, catch it from frontend
 
-2. Log in:
+2. **Log in**  
     Path: **/login**  
     Command: **POST**  
     Params: None  
