@@ -92,7 +92,7 @@ exports.collection_delete_id = (req, res, next) => {
 //params: 
 exports.collection_post = [
     body('name').exists().isLength({max: 100, min: 1}).withMessage("name must be less than 100 character-long and exist"),
-    body('type').isIn(["news", 'word']),
+    body('type').isIn(["news", 'word']).withMessage("type must be either: word or news"),
     async (req, res, next) => {
         let errors = validationResult(req);
 

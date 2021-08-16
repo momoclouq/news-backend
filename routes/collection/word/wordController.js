@@ -5,7 +5,7 @@ const {body, validationResult} = require('express-validator');
 const mongoose = require('mongoose');
 
 //tested
-//params: wordid
+//params: wordid, collectionid
 exports.word_get_id = (req, res, next) => {
     Word.findById(req.params.wordid).exec((err, word) => {
         if (err) return next(err);
