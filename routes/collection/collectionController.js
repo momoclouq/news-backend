@@ -55,7 +55,6 @@ exports.collection_put_id = [
     }
 ];
 
-//tested
 //params: collectionid
 //needs checking the words id and news id
 exports.collection_delete_id = (req, res, next) => {
@@ -63,23 +62,30 @@ exports.collection_delete_id = (req, res, next) => {
         if(err) return next(err);
         if(oldCollection == null) return res.json({
             errors: "collection cannot be found",
-        })
+        });
 
-        // //delete old collection's words
-        // try{
-        //     if(oldCollection.type == "word"){
-        //         await Promise.all(oldCollection.item_ids.map(async (id) => {
-        //             await Word.findByIdAndDelete(id);
-        //         }));
-        //     }
-        // }catch(err){
-        //     return next(err);
-        // }
+        //remove old reference from the user collection list
+        User.findById(req.user._id).exec(async (err, user) => {
+            if(err) return next(err);
+            if(user == null) return res.json({
+                errors: "user does not exist"
+            })
 
-        return res.json({
-            success: "collection is deleted"
-        })
-    })
+            try{
+                if(oldCollection.type == 'word') {
+                    user.word_collection.pull(req.params.collectionid);
+                }
+                else user.news_collection.pull(req.params.collectionid);
+                await user.save();
+
+                return res.json({
+                    success: "collection deleted"
+                });
+            }catch(error){
+                return next(error);
+            }
+        });
+    });
 };
 
 //tested

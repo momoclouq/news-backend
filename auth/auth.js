@@ -1,6 +1,7 @@
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const User = require('../model/user');
+const bcrypt = require('bcrypt');
 
 //json web token
 const JWTstrategy = require('passport-jwt').Strategy;
@@ -57,11 +58,13 @@ passport.use(
           if (err) return done(err);
 
           if (foundUser == null){
+            const hash = await bcrypt.hash(req.body.password, 10);
+
             let newUser = await User.create({
               username: req.body.username,
               fullname: req.body.fullname,
               email: req.body.email,
-              password: req.body.password,
+              password: hash,
               city: req.body.city,
               country: req.body.country,
               word_collections: [],

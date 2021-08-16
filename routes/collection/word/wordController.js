@@ -77,18 +77,33 @@ exports.word_put_id = [
     }
 ];
 
+//tested
 //params: collectionid, wordid
 exports.word_delete_id = async (req, res, next) => {
-    await Collection.updateOne( {_id: req.params.collectionid}, { $pull: {item_ids: [req.params.wordid] } });
     Word.findByIdAndDelete(req.params.wordid).exec((err, temp) => {
         if(err) return next(err);
+
         if(temp == null) res.json({
             errors: "word is not found"
         });
 
-        //return success message
-        res.json({
-            success: "word deleted"
+        //delete word reference in the collection
+        Collection.findById(req.params.collectionid, 'item_ids')
+        .exec((err, doc) => {
+            if(err) return next(err);
+            if(doc == null) return res.json({
+                errors: "collection does not exists"
+            })
+
+            doc.item_ids.pull(temp._id);
+
+            doc.save((err) => {
+                if (err) return next(err);
+                //return success message
+                res.json({
+                    success: "word deleted"
+                });
+            })
         });
     });
 }
