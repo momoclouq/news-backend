@@ -193,3 +193,25 @@ Some terms:
 
     Error: "errors". Content: "collection not found"  
 
+### News (working with collection)  
+1. **Add news id to a news collection**  
+    Path: **/collection/:collectionid/news**  
+    Command: **POST**  
+    Params: secret_token (token received when log in)  
+    req.body: 
+        - newsid: String (in integer form, newsid >= 1), required  
+
+    Return: "success". Content: "news is added to collection + collectionid".  
+
+    Error: "errors". Content: "collection does not exist" or "news id must exists" or "news id must be an integer larger than 1"  
+
+2. **Delete news by id (from collection)**  
+    Path: **/collection/:collectionid/news/:newsid**  
+    Command: **DELETE**  
+    Params: secret_token (token received when log in)  
+    req.body: None  
+
+    Return: "success". content: "News deleted"  
+
+    Error: "errors". Content: "collection deos not exist"  
+
