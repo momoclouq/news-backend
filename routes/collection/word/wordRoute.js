@@ -6,22 +6,21 @@ const wordController = require('./wordController');
 
 //path: collection/:collectionid/word
 
-//check if word is in the collection
-//problem: too long @@
-// router.use("/:wordid", function(req, res, next){
-//     User.findById(req.user._id)
-//     .select("word_collection")
-//     .exec(function(err, user){
-//         if(err) return next(err);
-//         if(!user) return res.json({
-//             errors: "not found user"
-//         });
+//check if collection is a word collection
+router.use("/*", function(req, res, next){
+    Collection.findById(req.params.collectionid)
+    .exec(function(err, collection){
+        if(err) return next(err);
+        if(collection == null) return res.json({
+            errors: "collection does not exist"
+        });
 
-//         user.word_collection.foreach(async (id) => {
-            
-//         })
-//     })
-// });
+        if(collection.type != "word") return res.json({
+            errors: "wrong collection type"
+        });
+        else next();
+    });
+})
 
 //get word by id
 router.get('/:wordid', wordController.word_get_id);

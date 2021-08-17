@@ -3,8 +3,10 @@ var router = express.Router({mergeParams: true});
 
 const User = require('../../model/user');
 
-const wordRouter = require("./word/wordRoute");
 const collectionController = require('./collectionController');
+
+const wordRouter = require("./word/wordRoute");
+const newsRouter = require("./news/newsRoute");
 //path: /collection
 
 //create a collection
@@ -13,8 +15,9 @@ router.post('/', collectionController.collection_post);
 //get all collection
 router.get('/', collectionController.collection_get_all);
 
+//error in handling sub route
 //check if collectionid belongs to the user
-router.use("/:collectionid", async function(req, res, next){
+router.use("/:collectionid/*", async function(req, res, next){
     try{
         let user = await User.findById(req.user._id);
         let found = false;
@@ -44,6 +47,9 @@ router.use("/:collectionid", async function(req, res, next){
 
 //word route
 router.use("/:collectionid/word", wordRouter);
+
+//news route
+router.use("/:collectionid/news", newsRouter);
 
 //get 1 collection by id
 router.get('/:collectionid', collectionController.collection_get_id);
