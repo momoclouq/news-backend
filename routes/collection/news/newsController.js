@@ -24,6 +24,7 @@ exports.news_delete_id = function(req, res, next){
 exports.news_post_id = [
     body("newsid")
     .exists()
+    .withMessage("news id must exist")
     .isInt()
     .custom((value) => value >= 1)
     .withMessage("news id must be an integer larger than 1"),

@@ -22,7 +22,7 @@ router.post(
             //wrong email or password
             if(!user){
                 return res.json({
-                    errors: info
+                    errors: info.message
                 });
             }
 
@@ -62,12 +62,16 @@ router.post('/signup', [
         }
         else next();
     },
-    passport.authenticate("signup", {session: false}),
-    (req, res, next) => {
-        return res.json({
-            message: "sign up successful",
-            user: req.user
+    function(req, res, next){
+      passport.authenticate("signup", {session: false}, function(err, user, info){
+        if(user) return res.json({
+          message: "sign up successful",
+          user: user
+      })
+        else res.json({
+          errors: info.message
         })
+      })(req, res, next);
     }
 ]);
 
