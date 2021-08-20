@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const helmet = require("helmet");
 const compression = require("compression");
+const cors = require('cors');
 
 //set up mongoose connection
 const mongoose = require('mongoose');
@@ -27,6 +28,9 @@ require('./auth/auth');
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+//cors usage for all routes
+app.use(cors());
 
 //extra middleware for better connection and security
 app.use(compression());
