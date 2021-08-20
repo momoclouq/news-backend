@@ -10,7 +10,7 @@ exports.user_get_id = (req, res, next) => {
     .select('username fullname city country created_date')
     .exec((err, user) => {
         if(err) return next(err);
-        if(user == null) return res.json({
+        if(user == null) return res.status(406).json({
             errors: "user not found"
         });
 
@@ -27,7 +27,7 @@ exports.user_get = (req, res, next) => {
     .select('username fullname city country created_date email word_collection news_collection')
     .exec((err, userFound) => {
         if(err) return next(err);
-        if(userFound == null) return res.json({
+        if(userFound == null) return res.status(406).json({
             errors: "user not found"
         });
 
@@ -55,7 +55,7 @@ exports.user_update = [
         else {
             User.findByIdAndUpdate(req.user._id, update, (err, foundUser) => {
                 if(err) return next(err);
-                if(foundUser == null) return res.json({errors: "user not found"});
+                if(foundUser == null) return res.status(406).json({errors: "user not found"});
 
                 return res.json({success: "user updated"});
             })
@@ -68,7 +68,7 @@ exports.user_update = [
 exports.user_delete = (req, res, next) => {
     User.findByIdAndDelete(req.user._id, (err, foundUser) => {
         if(err) return next(err);
-        if(foundUser == null) return res.json({errors: "user not found"});
+        if(foundUser == null) return res.status(406).json({errors: "user not found"});
 
         return res.json({message: "user deleted"});
     });

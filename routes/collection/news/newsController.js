@@ -7,7 +7,7 @@ exports.news_delete_id = function(req, res, next){
     Collection.findById(req.params.collectionid)
     .exec(async function(err, collection){
         if(err) return next(err);
-        if(collection == null) return res.json({
+        if(collection == null) return res.status(406).json({
             errors: "collection does not exist"
         });
 
@@ -32,7 +32,7 @@ exports.news_post_id = [
         let errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            return res.json({
+            return res.status(406).json({
                 errors: errors.array()
             });
         }else{
@@ -41,7 +41,7 @@ exports.news_post_id = [
             .exec(async function(err, collection){
                 if(err) return next(err);
                 if(collection == null){
-                    return res.json({
+                    return res.status(406).json({
                         errors: "collection does not exist"
                     })
                 }

@@ -10,7 +10,7 @@ exports.word_get_id = (req, res, next) => {
     Word.findById(req.params.wordid).exec((err, word) => {
         if (err) return next(err);
         //check if word is found, return error otherwise
-        if (word == null) res.json({
+        if (word == null) res.status(406).json({
             errors: "word is not found"
         });
 
@@ -30,7 +30,7 @@ exports.word_post = [
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            res.json({
+            res.status(406).json({
                 errors: errors.array(), 
             });
         } else {
@@ -66,11 +66,11 @@ exports.word_put_id = [
             note: req.body.note
         }
 
-        if(!errors.isEmpty()) return res.json({ errors: errors.array() });
+        if(!errors.isEmpty()) return res.status(406).json({ errors: errors.array() });
         else {
             Word.findByIdAndUpdate(req.params.wordid, update, function(err, temp){
                 if(err) return next(err);
-                if (temp == null) res.json({ errors: "word is not found"});
+                if (temp == null) res.status(406).json({ errors: "word is not found"});
                 else res.json({ success: temp});
             });
         }
@@ -83,7 +83,7 @@ exports.word_delete_id = async (req, res, next) => {
     Word.findByIdAndDelete(req.params.wordid).exec((err, temp) => {
         if(err) return next(err);
 
-        if(temp == null) res.json({
+        if(temp == null) res.status(406).json({
             errors: "word is not found"
         });
 
@@ -91,7 +91,7 @@ exports.word_delete_id = async (req, res, next) => {
         Collection.findById(req.params.collectionid, 'item_ids')
         .exec((err, doc) => {
             if(err) return next(err);
-            if(doc == null) return res.json({
+            if(doc == null) return res.status(406).json({
                 errors: "collection does not exists"
             })
 
@@ -114,7 +114,7 @@ exports.word_get_all = (req, res, next) => {
     Collection.findById(req.params.collectionid)
     .exec(async function(err, collection){
         if (err) return next(err);
-        if(collection == null) return res.json({
+        if(collection == null) return res.status(406).json({
             errors: "collection not found"
         });
 

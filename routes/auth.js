@@ -21,7 +21,7 @@ router.post(
 
             //wrong email or password
             if(!user){
-                return res.json({
+                return res.status(401).json({
                     errors: info.message
                 });
             }
@@ -58,17 +58,18 @@ router.post('/signup', [
         let errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            return res.json({errors: errors.array()});
+            return res.status(406).json({errors: errors.array()});
         }
         else next();
     },
     function(req, res, next){
       passport.authenticate("signup", {session: false}, function(err, user, info){
+        if (err) return next(err);
         if(user) return res.json({
           message: "sign up successful",
           user: user
       })
-        else res.json({
+        else res.status(401).json({
           errors: info.message
         })
       })(req, res, next);

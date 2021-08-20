@@ -1,4 +1,5 @@
 var express = require('express');
+const { response } = require('../../../app');
 const User = require('../../../model/user');
 var router = express.Router({mergeParams: true});
 
@@ -11,11 +12,11 @@ router.use("/*", function(req, res, next){
     Collection.findById(req.params.collectionid)
     .exec(function(err, collection){
         if(err) return next(err);
-        if(collection == null) return res.json({
+        if(collection == null) return res.status(406).json({
             errors: "collection does not exist"
         });
 
-        if(collection.type != "word") return res.json({
+        if(collection.type != "word") return response.status(406).json({
             errors: "wrong collection type"
         });
         else next();

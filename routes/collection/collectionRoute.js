@@ -34,7 +34,7 @@ router.use("/:collectionid/*", async function(req, res, next){
         if(found){
             return next();
         }else{
-            return res.json({
+            return res.status(406).json({
                 errors: "wrong collection id"
             });
         }

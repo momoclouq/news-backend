@@ -12,7 +12,7 @@ const User = require("../../model/user");
 exports.collection_get_id = (req, res, next) => {
     Collection.findById(req.params.collectionid, (err, collection) => {
         if(err) return next(err);
-        if(collection == null) return res.json({
+        if(collection == null) return res.status(406).json({
             errors: "collection not found"
         });
 
@@ -36,14 +36,14 @@ exports.collection_put_id = [
         if(req.body.created_date != null) update.created_date = req.body.created_date;
 
         if(!errors.isEmpty()){
-            return res.json({
+            return res.status(406).json({
                 errors: errors.array(),
             });
         }
         else {
             Collection.findByIdAndUpdate(new mongoose.Types.ObjectId(req.params.collectionid), update, (err, oldCollection) => {
                 if(err) return next(err);
-                if(oldCollection == null) return res.json({
+                if(oldCollection == null) return res.status(406).json({
                     errors: "collection cannot be found",
                 })
 
@@ -60,14 +60,14 @@ exports.collection_put_id = [
 exports.collection_delete_id = (req, res, next) => {
     Collection.findByIdAndDelete(req.params.collectionid, async (err, oldCollection) => {
         if(err) return next(err);
-        if(oldCollection == null) return res.json({
+        if(oldCollection == null) return res.status(406).json({
             errors: "collection cannot be found",
         });
 
         //remove old reference from the user collection list
         User.findById(req.user._id).exec(async (err, user) => {
             if(err) return next(err);
-            if(user == null) return res.json({
+            if(user == null) return res.status(406).json({
                 errors: "user does not exist"
             })
 
@@ -97,7 +97,7 @@ exports.collection_post = [
         let errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            return res.json({
+            return res.status(406).json({
                 errors: errors.array(),
             });
         }
