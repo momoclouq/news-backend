@@ -68,7 +68,7 @@ router.post('/signup', [
           message: "sign up successful",
           user: user
       })
-        else res.json({
+        else res.status(401).json({
           errors: info.message
         })
       })(req, res, next);
