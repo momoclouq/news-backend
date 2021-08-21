@@ -58,7 +58,7 @@ router.post('/signup', [
         let errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            return res.json({errors: errors.array()});
+            return res.status(422).json({errors: errors.array()});
         }
         else next();
     },
@@ -68,7 +68,7 @@ router.post('/signup', [
           message: "sign up successful",
           user: user
       })
-        else res.status(401).json({
+        else res.status(422).json({
           errors: info.message
         })
       })(req, res, next);
