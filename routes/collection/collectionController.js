@@ -130,13 +130,27 @@ exports.collection_post = [
 //tested
 //params:
 exports.collection_get_all = (req, res, next) => {
-    Collection.find({})
-    .select('type name created_date')
-    .sort({create_date: "desc"})
-    .exec(function(err, collections){
+    User.findById(req.user._id).exec(async function(err, user){
         if(err) return next(err);
-        res.json({
-            collections: collections
+        if(user == null) return res.status(406).json({
+            errors: "user does not exists"
         });
+
+        try{
+            let word_collection = await Promise.all(user.word_collection.map(async (collectionid, index) => {
+                return await Collection.findById(collectionid).select("name type created_date");
+            }));
+
+            let news_collection = await Promise.all(user.news_collection.map(async (collectionid, index) => {
+                return await Collection.findById(collectionid).select("name type created_date");
+            }))
+
+            return res.json({
+                word_collections: word_collection,
+                news_collections: news_collection
+            })
+        }catch(err){
+            return next(err);
+        }
     })
 }

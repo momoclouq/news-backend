@@ -103,7 +103,9 @@ Some terms:
     Params: secret_token (token received when log in)  
     req.body: None
 
-    Return: "collections". An array of all collection. Include fields: type, name, created_date 
+    Return:  
+        -"word_collections". An array of all word collection. return fields: "name", "created_date", "type"  
+        -"news_collections". An array of all news collection. return fields: "name", "created_date", "type"  
 
     Error: None
 
