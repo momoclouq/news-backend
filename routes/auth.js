@@ -21,7 +21,7 @@ router.post(
 
             //wrong email or password
             if(!user){
-                return res.json({
+                return res.status(401).json({
                     errors: info.message
                 });
             }
