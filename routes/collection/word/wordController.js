@@ -45,6 +45,7 @@ exports.word_post = [
                 await collection.update({$push: {item_ids: newWord._id.toString()}});
 
                 return res.json({
+                    _id: newWord._id,
                     success: "word is created for collection " + collection._id
                 });
             }   
