@@ -4,6 +4,7 @@ const User = require('../../../model/user');
 var router = express.Router({mergeParams: true});
 
 const wordController = require('./wordController');
+const Collection = require('../../../model/collection');
 
 //path: collection/:collectionid/word
 
